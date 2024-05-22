@@ -49,9 +49,20 @@
                     </div>
                     <div class="col-xl-3 col-lg-4">
                         <div class="header-info header-info-right">
+                            @auth
                             <ul>
-                                <li><i class="fi-rs-key"></i><a href="login.html">Log In </a>  / <a href="register.html">Sign Up</a></li>
+                                <li><i class="fi-rs-user"></i> {{ Auth::user()->name }} /
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">LogOut</a>
+                                    </form>
+                                </li>
                             </ul>
+                            @else
+                            <ul>
+                                <li><i class="fi-rs-key"></i><a href="{{ route('login') }}">Log In </a>  / <a href="{{ route('register') }}">Sign Up</a></li>
+                            </ul>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -317,9 +328,9 @@
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                             <nav>
                                 <ul>
-                                    <li><a class="active" href="index.html">Home </a></li>
+                                    <li><a class="active" href="/">Home </a></li>
                                     <li><a href="about.html">About</a></li>
-                                    <li><a href="shop.html">Shop</a></li>
+                                    <li><a href="{{ route('shop') }}">Shop</a></li>
                                     <li class="position-static"><a href="#">Our Collections <i class="fi-rs-angle-down"></i></a>
                                         <ul class="mega-menu">
                                             <li class="sub-mega-menu sub-mega-menu-width-22">
@@ -380,15 +391,23 @@
                                     <li><a href="blog.html">Blog </a></li>
                                     <li><a href="contact.html">Contact</a></li>
                                     <li><a href="#">My Account<i class="fi-rs-angle-down"></i></a>
-                                        <ul class="sub-menu">
-                                            <li><a href="#">Dashboard</a></li>
-                                            <li><a href="#">Products</a></li>
-                                            <li><a href="#">Categories</a></li>
-                                            <li><a href="#">Coupons</a></li>
-                                            <li><a href="#">Orders</a></li>
-                                            <li><a href="#">Customers</a></li>
-                                            <li><a href="#">Logout</a></li>
-                                        </ul>
+                                        @auth
+                                            @if (Auth::user()->utype === 'ADM')
+                                            <ul class="sub-menu">
+                                                <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                                <li><a href="#">Products</a></li>
+                                                <li><a href="#">Categories</a></li>
+                                                <li><a href="#">Coupons</a></li>
+                                                <li><a href="#">Orders</a></li>
+                                                <li><a href="#">Customers</a></li>
+                                                <li><a href="#">Logout</a></li>
+                                            </ul>
+                                            @else
+                                                <ul class="sub-menu">
+                                                    <li><a href="{{ route('user.dashboard') }}">Dashboard</a></li>
+                                                </ul>
+                                            @endif
+                                        @endif
                                     </li>
                                 </ul>
                             </nav>
